@@ -1,0 +1,9 @@
+dependencies:
+    - python=3.5
+    - numpy
+    - difflib
+    - matplotlib
+    - corner
+    - ipywidgets
+    - pip:
+        - git+https://github.com/jan-rybizki/Chempy.git@v0.1
