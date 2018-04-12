@@ -12,7 +12,6 @@ from Chempy.solar_abundance import solar_abundances
 from Chempy.data_to_test import plot_processes
 # Widget Imports
 import ipywidgets as widgets
-import difflib
 
 #==========================================================
 # WIDGET GENERATION
