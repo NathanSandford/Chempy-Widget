@@ -244,11 +244,11 @@ def create_ElementSelection(a):
     options_dict = {element: widgets.Checkbox(description=element, value=False, indent=False, layout=widgets.Layout(width='9%')) for element in list_of_elements}
     options = [options_dict[element] for element in list_of_elements]
     
-    options[5].value = True # Ca
-    options[11].value = True # Fe
-    options[17].value = True # Mg
-    options[27].value = True # Si
-    options[23].value = True # O
+    options[4].value = True # Ca
+    options[10].value = True # Fe
+    options[16].value = True # Mg
+    options[26].value = True # Si
+    options[22].value = True # O
     
     options_widget = widgets.HBox(options,
                                   layout=widgets.Layout(width='99%',
@@ -346,7 +346,7 @@ def create_ProgressBar(max):
 #---------------------------------------
 def update_a(basic_inputs,model_inputs):
     a = ModelParameters()
-    a.elements_to_trace = ['Al', 'Ar', 'B', 'Be', 'C', 'Ca', 'Cl', 'Co', 'Cr', 'Cu', 'F', 'Fe', 'Ga', 'Ge', 'H', 'He', 'K', 'Li', 'Mg', 'Mn', 'N', 'Na', 'Ne', 'Ni', 'O', 'P', 'S', 'Sc', 'Si', 'Ti', 'V', 'Zn']
+    a.elements_to_trace = ['Al', 'Ar', 'B', 'C', 'Ca', 'Cl', 'Co', 'Cr', 'Cu', 'F', 'Fe', 'Ga', 'Ge', 'H', 'He', 'K', 'Li', 'Mg', 'Mn', 'N', 'Na', 'Ne', 'Ni', 'O', 'P', 'S', 'Sc', 'Si', 'Ti', 'V', 'Zn']
     a.check_processes = True
 
     a.start = basic_inputs[0] #time_range.value[0]
@@ -526,7 +526,12 @@ def plotMDF(element,legend_loc=2,**kwargs):#,data):
     
     color=iter(plt.cm.viridis(np.linspace(0,1,len(kwargs))))
     keys = sorted(kwargs.keys())
-    bins = np.linspace(-4,1,51)
+    min = []
+    max = []
+    for i,key in enumerate(sorted(kwargs)):
+        min.append(np.min(kwargs[key][element][1:]))
+        max.append(np.max(kwargs[key][element][1:]))
+    bins = np.linspace(np.min(min),np.max(max),25)
     for i,key in enumerate(sorted(kwargs)):
         c=next(color)
         ax.hist(kwargs[key][element][1:],bins=bins,color=c,histtype='step', label = '%s' % keys[i],density=False)
