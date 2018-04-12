@@ -692,7 +692,7 @@ def plot_processes(summary_pdf,name_string,sn2_cube,sn1a_cube,agb_cube,elements,
             l4 = ax2.bar(np.arange(len(elements)),total_feedback, color = 'k', alpha = 0.2 ,label='total', width = 1)
             ax2.set_yscale('log')
             ax2.set_ylabel('Total Mass Feedback', size=50)
-            ax2.tick_params(axis='y', labelsize=30)
+            plt.yticks(size=30)
             lines = [l1,l2,l3,l4]
             labels = ['SN II', 'SN Ia', 'AGB', 'Total']
             plt.legend(lines, labels,loc='upper right',numpoints=1,fontsize=30).get_frame().set_alpha(0.5)
