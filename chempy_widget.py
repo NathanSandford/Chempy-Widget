@@ -241,7 +241,7 @@ def create_ModelSelection():
 def create_ElementSelection(a):
     list_of_elements = a.elements_to_trace
     list_of_elements.remove('H')
-    search_widget = widgets.Text()
+    #search_widget = widgets.Text()
     options_dict = {element: widgets.Checkbox(description=element, value=False, indent=False, layout=widgets.Layout(width='9%')) for element in list_of_elements}
     options = [options_dict[element] for element in list_of_elements]
     
@@ -256,21 +256,22 @@ def create_ElementSelection(a):
                                                         display='inline-flex',flex_flow='row wrap')
                                   )
                                       
-    ElementSelection = widgets.VBox([search_widget, options_widget])
+    #ElementSelection = widgets.VBox([search_widget, options_widget])
+    ElementSelection = widgets.VBox([options_widget])
                                                         
     # Wire the search field to the checkboxes
-    def on_text_change(change):
-        search_input = change['new']
-        if search_input == '':
-            # Reset search field
-            new_options = [options_dict[element] for element in list_of_elements]
-        else:
-            # Filter by search field using difflib.
-            close_matches = difflib.get_close_matches(search_input, list_of_elements, cutoff=0.0)
-            new_options = [options_dict[element] for element in close_matches]
-        options_widget.children = new_options
-
-    search_widget.observe(on_text_change, names='value')
+    #def on_text_change(change):
+    #    search_input = change['new']
+    #    if search_input == '':
+    #        # Reset search field
+    #        new_options = [options_dict[element] for element in list_of_elements]
+    #    else:
+    #        # Filter by search field using difflib.
+    #        close_matches = difflib.get_close_matches(search_input, list_of_elements, cutoff=0.0)
+    #        new_options = [options_dict[element] for element in close_matches]
+    #    options_widget.children = new_options
+    #
+    #search_widget.observe(on_text_change, names='value')
     return(ElementSelection)
 
 #..........................

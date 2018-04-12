@@ -1,7 +1,6 @@
 dependencies:
     - python=3.5
     - numpy
-    - difflib
     - matplotlib
     - corner
     - ipywidgets
