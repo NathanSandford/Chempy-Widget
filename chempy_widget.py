@@ -234,7 +234,7 @@ def create_ModelSelection():
                                       layout=widgets.Layout(width='99%'))
     model_select_3 = widgets.Checkbox(description='Model #3',value=False,indent=False,
                                       layout=widgets.Layout(width='99%'))
-    model_selection = widgets.VBox(children= [model_select_1,model_select_2,model_select_3])
+    model_selection = widgets.HBox(children= [model_select_1,model_select_2,model_select_3])
     return(model_seleciton_label,model_selection)
 
 def create_ElementSelection(a):
