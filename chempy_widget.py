@@ -475,8 +475,9 @@ def SampleStars_New(a,N,elements_to_sample,**kwargs):
     selection_raw = np.load("input/selection/red_clump_new.npy")
     time_selection_raw = np.load("input/selection/time_red_clump_new.npy")
     
-    sample = np.interp(kwargs['Model #1']['time'], time_selection_raw[::-1], selection_raw)
-    selection = np.interp(kwargs['Model #1']['time'], time_selection_raw[::-1], selection_raw)
+    keys = sorted(kwargs.keys())
+    sample = np.interp(kwargs[keys[0]]['time'], time_selection_raw[::-1], selection_raw)
+    selection = np.interp(kwargs[keys[0]]['time'], time_selection_raw[::-1], selection_raw)
     
     x = np.zeros((len(kwargs),len(elements_to_sample),N))
     keys = sorted(kwargs.keys())
