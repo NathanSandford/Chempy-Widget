@@ -522,6 +522,49 @@ def plotSFR(**kwargs):
     plot = ax.figure
     return(plot)
 
+def plotAbundances(element,legend_loc=4,**kwargs):
+    plot_lines = []
+    lines = []
+    linestyle=iter(['-','--',':'])
+    
+    fig ,ax1 = plt.subplots()
+    ax2 = ax1.twinx()
+    for i,key in enumerate(sorted(kwargs)):
+        ls=next(linestyle)
+        if element == 'Fe':
+            y_label = '[%s/H]' % element
+            element_label = '[%s_H]' % element
+            element_data = '__%s_H_' % element
+            l1, = ax1.plot(kwargs[key]['time'][1:],kwargs[key][element][1:],
+                               linestyle = ls, linewidth=1,color='b')
+        else:
+            y_label = '[%s/Fe]' % element
+            element_label = '[%s_Fe]' % element
+            element_data = '__%s_Fe_' % element
+            l1, = ax1.plot(kwargs[key]['time'][1:],kwargs[key][element][1:]-kwargs[key]['Fe'][1:],
+                           linestyle = ls, linewidth=1,color='b')
+
+        plot_lines.append([l1])
+        sfr = kwargs[key]['weights'][1:]
+        sfr /= np.trapz(sfr,kwargs[key]['time'][1:])
+        ax2.plot(kwargs[key]['time'][1:],sfr,color='k',linestyle=ls,label=key)
+
+    legend1 = plt.legend(plot_lines[0], ['[X/Fe]'], loc=1,bbox_to_anchor=(1.0,1.0),framealpha=0.5)
+    ax2.legend(loc=1,bbox_to_anchor=(1.0, 0.9),title='Star Formation Rate',framealpha=0.5)
+    plt.gca().add_artist(legend1)
+    
+    ax1.set(xlabel='Time (Gyr)',
+            ylabel=y_label,
+            title='%s Abundance vs. Time' %element)
+    ylims = ax2.get_ylim()
+    ax2.set(ylabel=r'SFR (M$_*$/Gyr)',ylim=(ylims[0],ylims[1]*2))
+    
+    plt.tight_layout()
+    plt.savefig('temp/Abundances_temp_'+element+'.png',)
+    #plot = ax1.figure
+    #return(plot)
+    return()
+
 def plotMDF(element,legend_loc=2,**kwargs):#,data):
     fig, ax = plt.subplots()
     
@@ -576,40 +619,48 @@ def plotCorner(elements_to_plot,**kwargs):
             figure = corner.corner(data,labels=label,color=c)
         else:
             figure = corner.corner(data,color=c,fig=figure)
+
     figure.legend(handles=lines, loc=1,
                   bbox_to_anchor=(0.95, 0.95),fontsize=(12+2*len(elements_to_plot)))
     return(figure)
 
 def plotYieldContributions(element,legend_loc=4,**kwargs):
-    fig, ax = plt.subplots()
     plot_lines = []
     lines = []
     linestyle=iter(['-','--',':'])
     
+    fig ,ax1 = plt.subplots()
+    ax2 = ax1.twinx()
     for i,key in enumerate(sorted(kwargs)):
         ls=next(linestyle)
-        l1, = ax.plot(kwargs[key].time,np.cumsum(kwargs[key].sn2_cube[element] + kwargs[key].sn1a_cube[element] + kwargs[key].agb_cube[element]),
-                      linestyle = ls, linewidth=5,color='gray')
-        l2, = ax.plot(kwargs[key].time,np.cumsum(kwargs[key].sn2_cube[element]),
+        l1, = ax1.plot(kwargs[key].time,np.cumsum(kwargs[key].sn2_cube[element] + kwargs[key].sn1a_cube[element] + kwargs[key].agb_cube[element]),
+                              linestyle = ls, linewidth=5,color='gray')
+        l2, = ax1.plot(kwargs[key].time,np.cumsum(kwargs[key].sn2_cube[element]),
                 linestyle = ls, linewidth=1,color='b')
-        l3, = ax.plot(kwargs[key].time,np.cumsum(kwargs[key].sn1a_cube[element]),
+        l3, = ax1.plot(kwargs[key].time,np.cumsum(kwargs[key].sn1a_cube[element]),
                 linestyle = ls, linewidth=1,color='g')
-        l4, = ax.plot(kwargs[key].time,np.cumsum(kwargs[key].agb_cube[element]),
+        l4, = ax1.plot(kwargs[key].time,np.cumsum(kwargs[key].agb_cube[element]),
                 linestyle = ls, linewidth=1,color='r')
         plot_lines.append([l1,l2,l3,l4])
-        lines.append(matplotlib.lines.Line2D([], [], color='k',linestyle = ls, label=key))
+        
+        sfr = kwargs[key].cube['sfr']
+        sfr /= np.trapz(sfr,kwargs[key].time)
+        ax2.plot(kwargs[key].time,sfr,color='k',linestyle=ls,label=key)
+        #lines.append(matplotlib.lines.Line2D([], [], color='k',linestyle = ls, label=key))
     
-    legend1 = plt.legend(plot_lines[0], ['Total','CC-SN','SN Ia','AGB'], loc=4)
-    ax.legend(handles=lines, loc=4,bbox_to_anchor=(0.8, 0.0))
+    legend1 = plt.legend(plot_lines[0], ['Total','CC-SN','SN Ia','AGB'], loc=4,title='Yield Contribution',framealpha=0.5)
+    #ax2.legend(handles=lines, loc=4,bbox_to_anchor=(0.8, 0.0),title='SFR')
+    ax2.legend(loc=4,bbox_to_anchor=(0.70, 0.0),title='Star Formation Rate',framealpha=0.5)
     plt.gca().add_artist(legend1)
 
-    ax.set(xlabel='Time (Gyr)',
+    ax1.set(xlabel='Time (Gyr)',
            ylabel='Mass Fraction Expelled',
            title='%s Yield Contributions' %element,
-           xscale='log',
            yscale='log')
+    ylims = ax2.get_ylim()
+    ax2.set(ylabel=r'SFR (M$_*$/Gyr)',ylim=(ylims[0],ylims[1]*2))
            
-    plot = ax.figure
+    plot = ax1.figure
     return(plot)
 
 def plot_processes(summary_pdf,name_string,sn2_cube,sn1a_cube,agb_cube,elements,cube1,number_of_models_overplotted):
